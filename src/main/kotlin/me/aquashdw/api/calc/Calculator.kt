@@ -2,7 +2,7 @@ package me.aquashdw.api.calc
 
 // try calculating bitwise strings without calling to int
 class Calculator {
-    fun bitwiseAdder(x: String, y: String): String? {
+    fun bitwiseAdder(x: String, y: String): String {
         for(a: Char in x)
             if(!(a == '0' || a == '1'))
                 throw UnsupportedOperationException("char other than 0 or 1, left operand")
@@ -17,16 +17,14 @@ class Calculator {
         leftArray = leftArray.reversedArray()
         rightArray = rightArray.reversedArray()
 
-        var result = when(leftArray.size > rightArray.size){
+        return when(leftArray.size > rightArray.size){
             true -> {
                 this.adder(leftArray, rightArray)
             }
             false -> {
                 this.adder(rightArray, leftArray)
             }
-        }
-
-        return result.joinToString("")
+        }.joinToString("")
     }
 
     private fun adder(long: CharArray, short: CharArray): CharArray{
