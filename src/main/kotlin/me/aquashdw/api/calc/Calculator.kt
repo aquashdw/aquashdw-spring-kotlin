@@ -24,6 +24,69 @@ class Calculator {
     }
 
     private fun adder(long: CharArray, short: CharArray): CharArray{
-        throw NotImplementedError("TODO")
+        val resultReversed: CharArray = charArrayOf()
+        var overflowFlag: Boolean = false
+        var index: Int = 0
+
+        while(index < short.size){
+            val containsLong: Boolean = long[index] == '1'
+            val containsShort: Boolean = short[index] == '1'
+            // 1, 1, no overflow
+            if(containsLong && containsShort && !overflowFlag){
+                resultReversed[index] = '0'
+                overflowFlag = true
+            }
+            // 1, 1, overflow
+            else if (containsLong && containsShort && overflowFlag){
+                resultReversed[index] = '1'
+                overflowFlag = true
+            }
+            // 1, 0, no overflow
+            else if ((containsLong || containsShort) && !overflowFlag){
+                resultReversed[index] = '1'
+                overflowFlag = false
+            }
+            // 1, 0, overflow
+            else if ((containsLong || containsShort) && overflowFlag){
+                resultReversed[index] = '0'
+                overflowFlag = true
+            }
+            // 0, 0, no overflow
+            else if (!(containsLong || containsShort) && !overflowFlag){
+                resultReversed[index] = '0'
+                overflowFlag = false
+            }
+            // o, o, overflow
+            else{
+                resultReversed[index] = '1'
+                overflowFlag = false
+            }
+
+            index++
+        }
+
+        while (index < long.size && overflowFlag) {
+            if(long[index] == '1'){
+                resultReversed[index] = '0'
+            } else {
+                resultReversed[index] = '1'
+                overflowFlag = false
+                break
+            }
+        }
+
+        when (index < long.size){
+            true -> {
+                while (index < long.size){
+                    resultReversed[index] = long[index]
+                    index++
+                }
+            }
+            false -> {
+                if(overflowFlag) resultReversed[index + 1] = '1'
+            }
+        }
+
+        return resultReversed.reversedArray()
     }
 }
