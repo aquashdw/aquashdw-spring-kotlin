@@ -15,50 +15,56 @@ class Calculator {
         var rightArray: CharArray = y.toCharArray()
 
         leftArray = leftArray.reversedArray()
-        rightArray = leftArray.reversedArray()
+        rightArray = rightArray.reversedArray()
 
-        return when(leftArray.size > rightArray.size){
-            true -> this.adder(leftArray, rightArray)
-            false -> this.adder(rightArray, leftArray)
-        }.toString()
+        var result = when(leftArray.size > rightArray.size){
+            true -> {
+                this.adder(leftArray, rightArray)
+            }
+            false -> {
+                this.adder(rightArray, leftArray)
+            }
+        }
+
+        return result.joinToString("")
     }
 
     private fun adder(long: CharArray, short: CharArray): CharArray{
-        val resultReversed: CharArray = charArrayOf()
-        var overflowFlag: Boolean = false
-        var index: Int = 0
+        val resultReversed = mutableListOf<Char>()
+        var overflowFlag = false
+        var index = 0
 
         while(index < short.size){
             val containsLong: Boolean = long[index] == '1'
             val containsShort: Boolean = short[index] == '1'
             // 1, 1, no overflow
             if(containsLong && containsShort && !overflowFlag){
-                resultReversed[index] = '0'
+                resultReversed.add('0')
                 overflowFlag = true
             }
             // 1, 1, overflow
             else if (containsLong && containsShort && overflowFlag){
-                resultReversed[index] = '1'
+                resultReversed.add('1')
                 overflowFlag = true
             }
             // 1, 0, no overflow
             else if ((containsLong || containsShort) && !overflowFlag){
-                resultReversed[index] = '1'
+                resultReversed.add('1')
                 overflowFlag = false
             }
             // 1, 0, overflow
             else if ((containsLong || containsShort) && overflowFlag){
-                resultReversed[index] = '0'
+                resultReversed.add(index, '0')
                 overflowFlag = true
             }
             // 0, 0, no overflow
             else if (!(containsLong || containsShort) && !overflowFlag){
-                resultReversed[index] = '0'
+                resultReversed.add(index, '0')
                 overflowFlag = false
             }
             // o, o, overflow
             else{
-                resultReversed[index] = '1'
+                resultReversed.add('1')
                 overflowFlag = false
             }
 
@@ -67,26 +73,27 @@ class Calculator {
 
         while (index < long.size && overflowFlag) {
             if(long[index] == '1'){
-                resultReversed[index] = '0'
+                resultReversed.add(index, '0')
             } else {
-                resultReversed[index] = '1'
+                resultReversed.add(index, '1')
                 overflowFlag = false
                 break
             }
+            index++
         }
 
         when (index < long.size){
             true -> {
                 while (index < long.size){
-                    resultReversed[index] = long[index]
+                    resultReversed.add(long[index])
                     index++
                 }
             }
             false -> {
-                if(overflowFlag) resultReversed[index + 1] = '1'
+                if(overflowFlag) resultReversed.add('1')
             }
         }
 
-        return resultReversed.reversedArray()
+        return resultReversed.toCharArray().reversedArray()
     }
 }
